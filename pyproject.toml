@@ -1,0 +1,83 @@
+[tool.poetry]
+name = "algorithm"
+version = "0.1.0"
+description = ""
+authors = ["diklios <47837462+diklios5768@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+
+## 清华
+#[[tool.poetry.source]]
+#name = "tsinghua"
+#url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+#priority = "default"
+#
+#[[tool.poetry.source]]
+#name = "PyPI"
+#priority = "primary"
+
+[[tool.poetry.source]]
+name = "aliyun-source"
+url = "https://mirrors.aliyun.com/pypi/simple/"
+priority = "supplemental"
+
+[[tool.poetry.source]]
+name = "pytorch-cu117"
+url = "https://download.pytorch.org/whl/cu117"
+priority = "explicit"
+
+[[tool.poetry.source]]
+name = "pytorch-cu118"
+url = "https://download.pytorch.org/whl/cu118"
+priority = "explicit"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11"
+# tools
+python-dotenv = "^1.0.0"
+click = "^8.1.3"
+tqdm = "^4.64.0"
+typer = { extras = ["all"], version = "^0.7.0" }
+joblib = "^1.2.0"
+munch = "^2.5.0"
+# poetry plugin
+poethepoet = "^0.16.2"
+# table
+pandas = "^1.4.3"
+# image
+opencv-python = "4.5.5.64"
+Pillow = "^9.2.0"
+# ml
+scikit-learn = "^1.1.1"
+scikit-image = "^0.19.3"
+# dl
+einops = "^0.4.1"
+tensorboard = "^2.10.0"
+tensorboardX = "^2.5.1"
+tensorlayer = "^2.2.5"
+# torch
+albumentations = "^1.3.0"
+accelerate = "^0.16.0"
+timm = "^0.6.7"
+
+[tool.poe.tasks.torch-cpu]
+cmd = "pip3 install torch torchvision torchaudio"
+
+[tool.poe.tasks.torch-cpu-conda]
+cmd = "conda install pytorch torchvision torchaudio cpuonly -c pytorch"
+
+[tool.poe.tasks.torch-gpu]
+cmd = "pip install torch torchvision torchaudio --no-cache-dir --upgrade --extra-index-url https://download.pytorch.org/whl/${CUDA}"
+args = [
+    { name = "CUDA", default = "cu116", positional = true, help = "CUDA version" }
+]
+
+[tool.poe.tasks.torch-gpu-conda]
+cmd = "conda install pytorch torchvision torchaudio cudatoolkit=${CUDA} -c pytorch -c conda-forge"
+args = [
+    { name = "CUDA", default = "11.6", positional = true, help = "CUDA version" }
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
